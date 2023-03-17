@@ -18,10 +18,12 @@ contract ChargeGas {
         gasAddress = gasAddress_;
     }
 
-    function charge() external payable {
+    function charge() external payable returns (string memory){
 
       gasAddress.transfer(100000000000);
       payable(msg.sender).transfer(100000000000);
+        
+      return "Called!";
     }
 
 //    function charge(uint gasLevel) external payable {

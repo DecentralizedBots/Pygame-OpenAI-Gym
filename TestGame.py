@@ -19,10 +19,6 @@ with open(compiledContractPath) as file:
 # reference deployed contract
 contract = web3.eth.contract(address=deployedContractAddress, abi=contract_abi)
 
-# function calls
-
-# -------------------------------------------------------------------------------
-
 # Initialize Pygame
 pygame.init()
 font = pygame.font.Font('arial.ttf', 25)
@@ -95,8 +91,10 @@ while True:
     if gas_length < 0:
         gas_length = 0
 
+    # charge gas here
     if abs(car_x - station_x) < 50 and abs(car_y - station_y) < 50 and gas_length < gas_height and not any(keys):
         gas_length += 1
+        output = contract.functions.charge().call()
 
     if abs(car_x - PickUp_x) < 50 and abs(car_y - PickUp_y) < 50 and Holding == False:
         Holding = True
