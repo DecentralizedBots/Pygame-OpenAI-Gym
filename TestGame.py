@@ -6,7 +6,10 @@ from web3 import Web3, HTTPProvider
 blockchainAddress = "HTTP://127.0.0.1:7545"
 web3 = Web3(HTTPProvider(blockchainAddress))
 compiledContractPath = "build/contracts/chargeGas.json"
-deployedContractAddress = "X"
+
+# CHANGE EVERY RUN
+deployedContractAddress = "0xc6d8Fb6Ab20B75aA092E976C0B9b553EDbA95a46"
+carAddress = "0xbD22d1D5E480cFa1C0AC144Bb35f8b42078002c7"
 
 with open(compiledContractPath) as file:
     contract_json = json.load(file)
@@ -16,23 +19,12 @@ with open(compiledContractPath) as file:
 # reference deployed contract
 contract = web3.eth.contract(address=deployedContractAddress, abi=contract_abi)
 
-# function call here:
-charge_price = 100
-carAddress = "X"
-gasAddress = "X"
-
-station = contract.constructor(charge_price, gasAddress).buildTransaction({
-    "from": gasAddress
-})
-
-carCall = contract.functions.charge().transact({
-    "from": carAddress
-})
+# car build (beginning) => if this works, put it inside the charge function
+carCall = contract.functions.charge(carAddress).transact()  # => this is not working
 
 callReceipt = web3.eth.waitForTransactionReceipt(carCall)
 
 print(callReceipt)
-
 
 # --------------------------------------------------------------------------------
 
@@ -111,7 +103,6 @@ while True:
     # charge gas here
     if abs(car_x - station_x) < 50 and abs(car_y - station_y) < 50 and gas_length < gas_height and not any(keys):
         gas_length += 1
-        output = contract.functions.charge().call()
 
     if abs(car_x - PickUp_x) < 50 and abs(car_y - PickUp_y) < 50 and not Holding:
         Holding = True

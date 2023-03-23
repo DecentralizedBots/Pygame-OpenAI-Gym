@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-contract ChargeGas {
+contract chargeGas {
   // charge price per 1/100
-    uint chargePrice = 0;
+    uint chargePrice;
 
     // gas station address, who gets the money
     address payable public gasAddress;
@@ -12,19 +12,22 @@ contract ChargeGas {
     error fullTank();
     error highGasLevel(uint gasLevel);
     error lowBalance();
+    error notSent();
 
     constructor(uint chargePrice_, address payable gasAddress_) {
         chargePrice = chargePrice_;
         gasAddress = gasAddress_;
     }
 
-    function charge() external payable returns (string memory){
+    function charge(address payable msgSender) external payable{
+        if (msgSender.balance < chargePrice) {
+          revert lowBalance();
+        }
 
-      gasAddress.transfer(100000000000);
-      payable(msg.sender).transfer(100000000000);
-        
-      return "Called!";
+        msgSender.transfer(chargePrice);
+
     }
+}
 
 //    function charge(uint gasLevel) external payable {
 //        if (gasLevel > 100) {
@@ -45,4 +48,3 @@ contract ChargeGas {
 //        gasAddress.transfer(totalChargePrice);
 //        payable(msg.sender).transfer(totalChargePrice);
 //    }
-}
