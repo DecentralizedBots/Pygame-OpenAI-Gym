@@ -19,13 +19,9 @@ contract chargeGas {
         gasAddress = gasAddress_;
     }
 
-    function charge(address payable msgSender) external payable{
-        if (msgSender.balance < chargePrice) {
-          revert lowBalance();
-        }
-
-        msgSender.transfer(chargePrice);
-
+    function charge(address payable msgSender) public payable{
+        (bool sent, bytes memory data) = msgSender.call{value: chargePrice}("");
+        require(sent, "Failed to send Ether");
     }
 }
 
